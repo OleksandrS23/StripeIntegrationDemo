@@ -1,11 +1,11 @@
-# 🚀 Stripe Connect Platform
+# 🚀 Stripe Connect Integration Demo
 
-Complete platform for managing seller accounts and payments using Stripe Connect.
+Complete platform for managing seller accounts and payments using Stripe Connect. This demo showcases all major Stripe Connect features with a modern, interactive interface.
 
 ## 📋 Project Structure
 
 ```
-stripe-connect-platform/
+StripeIntegrationDemo/
 ├── backend/                 # NestJS API
 │   ├── src/
 │   │   ├── stripe/
@@ -28,12 +28,14 @@ stripe-connect-platform/
     │   │   ├── onboarding/             # Onboarding process
     │   │   └── accounts/               # Account list
     │   ├── payments/
-    │   │   ├── payment-intent/         # Custom payment
-    │   │   ├── checkout/               # Checkout Session
-    │   │   └── payment-link/           # Payment Link
-    │   ├── page.tsx                    # Home page
+    │   │   ├── payment-intent/         # Custom payment with Stripe Elements
+    │   │   ├── checkout/               # Checkout Session (redirect)
+    │   │   ├── embedded/               # 🆕 Embedded Checkout (no redirect)
+    │   │   ├── payment-link/           # Payment Link for sharing
+    │   │   └── demo/                   # 🆕 Complete payment flow demo
+    │   ├── page.tsx                    # Interactive dashboard
     │   └── layout.tsx
-    ├── components/                      # Reusable components
+    ├── components/                      # Reusable UI components
     ├── lib/
     │   └── api.ts                      # API client
     └── package.json
@@ -44,19 +46,112 @@ stripe-connect-platform/
 ### Connect Accounts
 
 - ✅ Create seller accounts (Express, Standard, Custom)
-- ✅ Complete onboarding process
-- ✅ List and account details
-- ✅ Balance verification
-- ✅ Multiple country support
+- ✅ Complete onboarding process with Stripe verification
+- ✅ List and manage account details
+- ✅ Balance verification and status checking
+- ✅ Multiple country support (US, BR, PT, GB, DE, CA)
 
-### Payments
+### Payment Methods
 
-- ✅ **Payment Intent**: Custom payments with full control
-- ✅ **Checkout Session**: Stripe-hosted page
-- ✅ **Payment Link**: Shareable link for social media
+- ✅ **Payment Intent**: Custom payments with full control and Stripe Elements
+- ✅ **Checkout Session**: Stripe-hosted payment page (redirect)
+- ✅ **🆕 Embedded Checkout**: Integrated checkout without redirects
+- ✅ **Payment Link**: Shareable links for social media/email
+- ✅ **🆕 Payment Demo**: Interactive preview of customer experience
+
+### Payment Features
+
 - ✅ Multiple currency support (USD, BRL, EUR, GBP)
-- ✅ Configurable platform fees
-- ✅ Local payment methods (MB Way, Multibanco, PIX, etc.)
+- ✅ Configurable platform fees and commissions
+- ✅ Local payment methods:
+  - 🇵🇹 **Portugal**: MB Way, Multibanco, Card
+  - 🇧🇷 **Brazil**: PIX, Card
+  - 🇺🇸 **US**: Card, ACH
+  - 🇬🇧 **UK**: Card, BACS
+  - 🇩🇪 **Germany**: Card, SEPA
+- ✅ Real-time payment status updates
+- ✅ Transfer management between accounts
+
+## 🔑 How to Get Stripe Test API Keys
+
+Before running the application, you need to obtain your Stripe API keys. Follow these steps:
+
+### Step 1: Create a Stripe Account
+
+1. Go to [https://stripe.com](https://stripe.com)
+2. Click **"Start now"** or **"Sign up"**
+3. Fill in your information:
+   - Email address
+   - Full name
+   - Country (this affects available features)
+   - Password
+4. Verify your email address
+
+### Step 2: Access the Dashboard
+
+1. Log in to [https://dashboard.stripe.com](https://dashboard.stripe.com)
+2. You'll see the main dashboard with overview metrics
+3. **Important**: Make sure you're in **Test Mode** (toggle in the left sidebar)
+   - Look for "Test mode" indicator
+   - Test mode allows you to simulate payments without real money
+
+### Step 3: Get Your API Keys
+
+1. In the left sidebar, click **"Developers"**
+2. Click **"API keys"**
+3. You'll see two types of keys:
+
+#### Publishable Key (pk*test*...)
+
+- **Safe to expose** in frontend code
+- Used by Stripe.js and Stripe Elements
+- Example: `pk_test_51Abc123...`
+- Copy this key - you'll need it for `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+
+#### Secret Key (sk*test*...)
+
+- **Keep this secret** - never expose in frontend
+- Used for server-side API calls
+- Example: `sk_test_51Abc123...`
+- Copy this key - you'll need it for `STRIPE_SECRET_KEY`
+
+### Step 4: Optional - Webhook Secret (for production)
+
+1. In the left sidebar, click **"Developers"** → **"Webhooks"**
+2. Click **"Add endpoint"**
+3. Enter your endpoint URL (e.g., `https://yourdomain.com/stripe/webhook`)
+4. Select events you want to listen to
+5. Copy the **Signing secret** (whsec\_...) for `STRIPE_WEBHOOK_SECRET`
+
+### Step 5: Test Your Keys
+
+You can verify your keys work by making a test API call:
+
+```bash
+curl https://api.stripe.com/v1/customers \
+  -u sk_test_YOUR_SECRET_KEY: \
+  -d email="test@example.com"
+```
+
+### 🚨 Important Security Notes
+
+- **Never commit API keys to version control**
+- **Use test keys (sk*test*/pk*test*) for development**
+- **Use live keys (sk*live*/pk*live*) only in production**
+- **Rotate keys if they're ever compromised**
+- **Store keys in environment variables, not in code**
+
+### 📝 Key Summary
+
+After completing these steps, you should have:
+
+| Key Type        | Environment Variable                 | Example Value         | Usage                |
+| --------------- | ------------------------------------ | --------------------- | -------------------- |
+| Secret Key      | `STRIPE_SECRET_KEY`                  | `sk_test_51Abc123...` | Backend API calls    |
+| Publishable Key | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | `pk_test_51Abc123...` | Frontend Stripe.js   |
+| Webhook Secret  | `STRIPE_WEBHOOK_SECRET`              | `whsec_abc123...`     | Webhook verification |
+
+---
 
 ## 🚀 How to Run
 
@@ -146,39 +241,60 @@ Frontend will be running at `http://localhost:3000`
 
 ### 1. Create Connect Account
 
-1. Access `/connect/create-account`
-2. Fill in email, country, and account type
+1. Access the home page at `http://localhost:3000`
+2. Fill in the "Create Connect Account" form:
+   - **Email**: Seller's email address
+   - **Country**: Choose from supported countries (US, BR, PT, GB, DE, CA)
+   - **Type**: Express (recommended), Standard, or Custom
 3. Click "Create Connect Account"
-4. Note the generated Account ID
+4. **Important**: Copy the generated Account ID - you'll need it for payments
 
 ### 2. Complete Onboarding
 
-1. Access `/connect/onboarding`
-2. Paste the Account ID
-3. Click to generate onboarding link
-4. Complete the verification process
+1. In the "Onboarding" section on the home page
+2. Paste the Account ID from step 1
+3. Click "Generate Verification Link"
+4. Click "Open Onboarding Link" to complete Stripe's verification process
+5. Use Stripe's test data for verification (see test data section below)
 
-### 3. Create Payment
+### 3. Create Payments
 
-Choose one of the methods:
+Choose from multiple payment methods:
+
+#### 🆕 Embedded Checkout (Recommended)
+
+- **Best for**: Integrated user experience
+- **Access**: `/payments/embedded` or click "View Embedded" on home page
+- **Features**: No redirects, stays on your site, professional UI
+- **Supports**: All payment methods including Multibanco for EUR
 
 #### Payment Intent (Custom Integration)
 
-1. Access `/payments/payment-intent`
-2. Fill in payment details
-3. Use the returned client_secret to integrate with Stripe Elements
+- **Best for**: Full control over payment flow
+- **Access**: `/payments/payment-intent`
+- **Features**: Custom UI with Stripe Elements, advanced customization
+- **Use case**: When you need complete control over the payment experience
 
 #### Checkout Session (Hosted Page)
 
-1. Access `/payments/checkout`
-2. Fill in details
-3. Share the generated link with the customer
+- **Best for**: Quick implementation
+- **Access**: `/payments/checkout`
+- **Features**: Stripe-hosted page, automatic mobile optimization
+- **Use case**: When you want Stripe to handle the entire payment UI
 
-#### Payment Link (For Social Media)
+#### Payment Link (For Sharing)
 
-1. Access `/payments/payment-link`
-2. Create the link
-3. Share via WhatsApp, Instagram, etc.
+- **Best for**: Social media, email, messaging
+- **Access**: `/payments/payment-link`
+- **Features**: Shareable URL, works anywhere
+- **Use case**: WhatsApp, Instagram, email campaigns
+
+#### 🆕 Payment Demo (Preview Experience)
+
+- **Best for**: Testing and demonstrations
+- **Access**: `/payments/demo`
+- **Features**: Shows customer experience with mockup preview
+- **Use case**: Understanding the complete payment flow
 
 ## 🔧 Environment Configuration
 
@@ -212,48 +328,107 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 
 ### Connect Accounts
 
-- `POST /stripe/connect/accounts` - Create account
-- `GET /stripe/connect/accounts` - List accounts
-- `GET /stripe/connect/accounts/:id` - Account details
+- `POST /stripe/connect/accounts` - Create Connect account
+- `GET /stripe/connect/accounts` - List all accounts
+- `GET /stripe/connect/accounts/:id` - Get account details
 - `POST /stripe/connect/account-links` - Create onboarding link
-- `GET /stripe/connect/accounts/:id/balance` - View balance
+- `GET /stripe/connect/accounts/:id/balance` - Get account balance
 
-### Payments
+### Payment Intents
 
 - `POST /stripe/payments/payment-intents` - Create Payment Intent
 - `POST /stripe/payments/payment-intents/:id/confirm` - Confirm payment
-- `GET /stripe/payments/payment-intents/:id` - Payment Intent details
-- `POST /stripe/payments/transfers` - Create transfer
+- `POST /stripe/payments/payment-intents/:id/cancel` - Cancel payment
+- `GET /stripe/payments/payment-intents/:id` - Get Payment Intent details
+- `POST /stripe/payments/payment-intents/mbway` - Create MB Way Payment Intent
+- `GET /stripe/payments/payment-methods/available` - Get available payment methods
 
-### Checkout
+### Checkout & Links
 
-- `POST /stripe/checkout/sessions` - Create Checkout Session
+- `POST /stripe/checkout/sessions` - Create Checkout Session (standard or embedded)
 - `POST /stripe/checkout/payment-links` - Create Payment Link
-- `POST /stripe/checkout/payment-intents-elements` - Payment Intent for Elements
+- `POST /stripe/checkout/payment-links/with-fee` - Create Payment Link with platform fee
+- `POST /stripe/checkout/payment-intents-elements` - Create Payment Intent for Stripe Elements
 
-## 💡 Tips
+### Transfers
+
+- `POST /stripe/payments/transfers` - Create transfer to Connect account
+
+## 💡 Tips & Best Practices
 
 1. **Test Mode**: Always use test keys (sk*test*...) during development
 2. **Onboarding**: Accounts must complete onboarding before receiving payments
-3. **Fees**: Configure application_fee_amount to retain your commission
-4. **Webhooks**: Configure webhooks to receive event notifications
+3. **Platform Fees**: Configure `application_fee_amount` to retain your commission
+4. **Webhooks**: Configure webhooks to receive real-time event notifications
+5. **Security**: Never expose secret keys in frontend code
+6. **Testing**: Use Stripe's test card numbers for comprehensive testing
+7. **Local Payments**: Enable local payment methods for better conversion rates
+8. **Mobile**: All payment methods are mobile-optimized automatically
+
+## 🧪 Test Data
+
+### Test Card Numbers
+
+- **Success**: `4242 4242 4242 4242`
+- **Requires authentication**: `4000 0025 0000 3155`
+- **Declined**: `4000 0000 0000 9995`
+- **Insufficient funds**: `4000 0000 0000 9995`
+- **Expired card**: `4000 0000 0000 0069`
+
+### Test Details
+
+- **Expiration**: Any future date (e.g., 12/34)
+- **CVC**: Any 3 digits (e.g., 123)
+- **ZIP**: Any postal code (e.g., 12345)
+
+### Personal Information (for onboarding)
+
+- **Name**: Any name
+- **Email**: Any valid email format
+- **Phone**: Any phone number format
+- **Address**: Any address (use real format for country)
 
 ## 🆘 Troubleshooting
 
 ### Error "Stripe API key not configured"
 
-- Verify environment variables are configured correctly
-- Make sure you're using real Stripe keys
+**Solution:**
+
+- Verify `.env` files exist in both root and backend directories
+- Check that keys start with `sk_test_` and `pk_test_`
+- Restart Docker containers after changing environment variables
 
 ### Account doesn't accept payments
 
-- Complete the onboarding process
-- Verify that charges_enabled is true
+**Solution:**
+
+- Complete the onboarding process through the verification link
+- Check that `charges_enabled` is `true` in account details
+- Verify account status is not restricted
 
 ### CORS Error
 
-- Check if backend is running
-- Confirm that NEXT_PUBLIC_API_URL points to the correct backend
+**Solution:**
+
+- Ensure backend is running on port 3001
+- Verify `NEXT_PUBLIC_API_URL=http://localhost:3001` in frontend
+- Check Docker containers are both running: `docker-compose ps`
+
+### Embedded Checkout not loading
+
+**Solution:**
+
+- Verify Stripe.js is loaded (check browser console)
+- Ensure `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is set correctly
+- Check that the client secret is valid and not expired
+
+### Payment methods not showing
+
+**Solution:**
+
+- Verify the currency is supported in the seller's country
+- Check that the Connect account supports the payment method
+- Ensure the account has completed onboarding for that region
 
 ## 📝 License
 
