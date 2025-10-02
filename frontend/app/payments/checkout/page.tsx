@@ -33,16 +33,16 @@ export default function CheckoutPage() {
         })
       })
       const data = await response.json()
-      console.log('📦 Resposta do checkout:', data)
+      console.log('📦 Checkout response:', data)
       
       if (response.ok && data.success) {
-        console.log('✅ Sucesso! SessionId:', data.data.sessionId, 'URL:', data.data.url)
+        console.log('✅ Success! SessionId:', data.data.sessionId, 'URL:', data.data.url)
         setResult(data.data)
       } else {
-        setError(data.error || data.message || 'Erro ao criar checkout')
+        setError(data.error || data.message || 'Error creating checkout')
       }
     } catch (err: any) {
-      console.error('❌ Erro:', err)
+      console.error('❌ Error:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -55,28 +55,28 @@ export default function CheckoutPage() {
         <h1>
           <i className="fas fa-shopping-cart"></i> Stripe Checkout
         </h1>
-        <p>Página de pagamento hospedada pelo Stripe</p>
+        <p>Payment page hosted by Stripe</p>
       </div>
 
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <a href="/" className="btn" style={{ marginBottom: '20px', background: '#6c757d', display: 'inline-block', width: 'auto', padding: '10px 20px' }}>
-          <i className="fas fa-arrow-left"></i> Voltar
+          <i className="fas fa-arrow-left"></i> Back
         </a>
 
         <div className="card">
           <div className="card-header">
             <i className="fas fa-external-link-alt"></i>
-            <h2>Criar Checkout Session</h2>
+            <h2>Create Checkout Session</h2>
           </div>
 
           <div className="info">
             <i className="fas fa-info-circle"></i>
-            <strong>Vantagens:</strong> Página segura hospedada pelo Stripe, design responsivo, múltiplos métodos de pagamento.
+            <strong>Advantages:</strong> Secure page hosted by Stripe, responsive design, multiple payment methods.
           </div>
 
           <div className="form-group">
             <label htmlFor="checkoutAmount">
-              <i className="fas fa-dollar-sign"></i> Valor (centavos)
+              <i className="fas fa-dollar-sign"></i> Amount (cents)
             </label>
             <input
               type="number"
@@ -90,18 +90,18 @@ export default function CheckoutPage() {
 
           <div className="form-group">
             <label htmlFor="checkoutCurrency">
-              <i className="fas fa-coins"></i> Moeda
+              <i className="fas fa-coins"></i> Currency
             </label>
             <select id="checkoutCurrency">
-              <option value="usd">USD - Dólar Americano</option>
-              <option value="brl">BRL - Real Brasileiro</option>
+              <option value="usd">USD - US Dollar</option>
+              <option value="brl">BRL - Brazilian Real</option>
               <option value="eur">EUR - Euro</option>
             </select>
           </div>
 
           <div className="form-group">
             <label htmlFor="checkoutAccountId">
-              <i className="fas fa-link"></i> Conta Conectada
+              <i className="fas fa-link"></i> Connected Account
             </label>
             <input
               type="text"
@@ -112,7 +112,7 @@ export default function CheckoutPage() {
 
           <div className="form-group">
             <label htmlFor="checkoutFee">
-              <i className="fas fa-percentage"></i> Taxa da Plataforma (centavos)
+              <i className="fas fa-percentage"></i> Platform Fee (cents)
             </label>
             <input
               type="number"
@@ -121,18 +121,18 @@ export default function CheckoutPage() {
               min="0"
               placeholder="200"
             />
-            <small style={{ color: '#666' }}>Ex: 200 = $2.00 de taxa</small>
+            <small style={{ color: '#666' }}>Ex: 200 = $2.00 fee</small>
           </div>
 
           <div className="form-group">
             <label htmlFor="productName">
-              <i className="fas fa-box"></i> Nome do Produto
+              <i className="fas fa-box"></i> Product Name
             </label>
             <input
               type="text"
               id="productName"
-              defaultValue="Produto Teste"
-              placeholder="Produto Teste"
+              defaultValue="Test Product"
+              placeholder="Test Product"
             />
           </div>
 
@@ -143,18 +143,18 @@ export default function CheckoutPage() {
             disabled={loading}
             style={{ background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)' }}
           >
-            {!loading && <><i className="fas fa-shopping-cart"></i> Criar Checkout Session</>}
+            {!loading && <><i className="fas fa-shopping-cart"></i> Create Checkout Session</>}
           </button>
 
           {error && (
             <div className="result error" style={{ display: 'block' }}>
-              <strong>❌ Erro:</strong> {error}
+              <strong>❌ Error:</strong> {error}
             </div>
           )}
 
           {result && (
             <div className="result success" style={{ display: 'block' }}>
-              <strong>✅ Checkout Session criado!</strong><br/>
+              <strong>✅ Checkout Session created!</strong><br/>
               <strong>Session ID:</strong> <code>{result.sessionId}</code><br/>
               <a 
                 href={result.url} 
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
                 className="btn" 
                 style={{ marginTop: '15px', display: 'inline-block' }}
               >
-                <i className="fas fa-external-link-alt"></i> Abrir Página de Pagamento
+                <i className="fas fa-external-link-alt"></i> Open Payment Page
               </a>
               <div style={{ marginTop: '15px', fontSize: '0.9rem' }}>
                 <strong>URL:</strong><br/>

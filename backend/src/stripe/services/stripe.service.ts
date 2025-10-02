@@ -391,7 +391,7 @@ export class StripeService {
     uiMode: 'hosted' | 'embedded' = 'hosted',
   ): Promise<Stripe.Checkout.Session> {
     try {
-      // Métodos de pagamento baseados na moeda
+      // Payment methods based on currency
       const paymentMethods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] = ['card'];
       
       if (currency.toLowerCase() === 'eur') {

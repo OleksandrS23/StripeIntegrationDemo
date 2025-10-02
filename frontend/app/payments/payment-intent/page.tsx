@@ -45,7 +45,7 @@ export default function PaymentIntentPage() {
       }
     } catch (err: any) {
       setError(
-        err.response?.data?.message || err.message || 'Erro ao criar Payment Intent',
+        err.response?.data?.message || err.message || 'Error creating Payment Intent',
       )
     } finally {
       setLoading(false)

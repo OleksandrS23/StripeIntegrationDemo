@@ -197,63 +197,63 @@ export default function Home() {
         <h1>
           <i className="fas fa-credit-card"></i> Stripe Connect Dashboard
         </h1>
-        <p>Experimente todas as funcionalidades do Stripe Connect de forma interativa</p>
+        <p>Experience all Stripe Connect features interactively</p>
       </div>
 
       <div className="warning">
         <i className="fas fa-exclamation-triangle"></i>
-        <strong> Modo de Teste:</strong> Esta aplicação está configurada para usar chaves de teste do Stripe. Nenhuma transação real será processada.
+        <strong> Test Mode:</strong> This application is configured to use Stripe test keys. No real transactions will be processed.
       </div>
 
       <div className="stats">
         <div className="stat-card">
           <div className="stat-number">{stats.accounts}</div>
-          <div className="stat-label">Contas Criadas</div>
+          <div className="stat-label">Created Accounts</div>
         </div>
         <div className="stat-card">
           <div className="stat-number">{stats.payments}</div>
-          <div className="stat-label">Pagamentos</div>
+          <div className="stat-label">Payments</div>
         </div>
         <div className="stat-card">
           <div className="stat-number">${stats.volume.toFixed(2)}</div>
-          <div className="stat-label">Volume Total</div>
+          <div className="stat-label">Total Volume</div>
         </div>
       </div>
 
       <div className="dashboard">
-        {/* Criar Conta Connect */}
+        {/* Create Connect Account */}
         <div className="card">
           <div className="card-header">
             <i className="fas fa-user-plus"></i>
-            <h2>Criar Conta Connect</h2>
+            <h2>Create Connect Account</h2>
           </div>
           <div className="form-group">
             <label htmlFor="email">
-              <i className="fas fa-envelope"></i> Email do Vendedor
+              <i className="fas fa-envelope"></i> Seller Email
             </label>
             <input
               type="email"
               id="email"
               name="email"
-              placeholder="vendedor@exemplo.com"
+              placeholder="seller@example.com"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="country"><i className="fas fa-globe"></i> País</label>
+            <label htmlFor="country"><i className="fas fa-globe"></i> Country</label>
             <select id="country" name="country">
-              <option value="US">🇺🇸 Estados Unidos</option>
-              <option value="BR">🇧🇷 Brasil</option>
-              <option value="CA">🇨🇦 Canadá</option>
-              <option value="GB">🇬🇧 Reino Unido</option>
+              <option value="US">🇺🇸 United States</option>
+              <option value="BR">🇧🇷 Brazil</option>
+              <option value="CA">🇨🇦 Canada</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
               <option value="PT">🇵🇹 Portugal</option>
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="type"><i className="fas fa-cog"></i> Tipo de Conta</label>
+            <label htmlFor="type"><i className="fas fa-cog"></i> Account Type</label>
             <select id="type" name="type">
-              <option value="express">Express (Recomendado - Mais Simples)</option>
-              <option value="standard">Standard (Mais Controle)</option>
-              <option value="custom">Custom (Máxima Customização)</option>
+              <option value="express">Express (Recommended - Simpler)</option>
+              <option value="standard">Standard (More Control)</option>
+              <option value="custom">Custom (Maximum Customization)</option>
             </select>
           </div>
           <button 
@@ -262,23 +262,23 @@ export default function Home() {
             onClick={createAccount}
             disabled={loading === 'createAccount'}
           >
-            {loading !== 'createAccount' && <><i className="fas fa-plus"></i> Criar Conta</>}
+            {loading !== 'createAccount' && <><i className="fas fa-plus"></i> Create Account</>}
           </button>
 
           {accountError && (
             <div className="result error" style={{ display: 'block' }}>
-              <strong>❌ Erro:</strong> {accountError}
+              <strong>❌ Error:</strong> {accountError}
             </div>
           )}
 
           {accountResult && (
             <div className="result success" style={{ display: 'block' }}>
-              <strong>✅ Conta criada com sucesso!</strong><br/>
+              <strong>✅ Account created successfully!</strong><br/>
               <strong>Account ID:</strong> <code>{accountResult.id}</code><br/>
               <strong>Email:</strong> {accountResult.email || 'N/A'}<br/>
-              <strong>País:</strong> {accountResult.country}<br/>
-              <strong>Tipo:</strong> {accountResult.type}<br/>
-              <small>Use este Account ID no formulário de Onboarding!</small>
+              <strong>Country:</strong> {accountResult.country}<br/>
+              <strong>Type:</strong> {accountResult.type}<br/>
+              <small>Use this Account ID in the Onboarding form!</small>
             </div>
           )}
         </div>
@@ -291,7 +291,7 @@ export default function Home() {
           </div>
           <div className="info">
             <i className="fas fa-info-circle"></i>
-            Após criar uma conta, use este formulário para gerar o link de verificação.
+            After creating an account, use this form to generate the verification link.
           </div>
           <div className="form-group">
             <label htmlFor="accountId">
@@ -310,18 +310,18 @@ export default function Home() {
             onClick={createAccountLink}
             disabled={loading === 'createLink'}
           >
-            {loading !== 'createLink' && <><i className="fas fa-link"></i> Gerar Link de Verificação</>}
+            {loading !== 'createLink' && <><i className="fas fa-link"></i> Generate Verification Link</>}
           </button>
 
           {linkError && (
             <div className="result error" style={{ display: 'block' }}>
-              <strong>❌ Erro:</strong> {linkError}
+              <strong>❌ Error:</strong> {linkError}
             </div>
           )}
 
           {linkResult && (
             <div className="result success" style={{ display: 'block' }}>
-              <strong>✅ Link de verificação gerado!</strong><br/>
+              <strong>✅ Verification link generated!</strong><br/>
               <a 
                 href={linkResult.url} 
                 target="_blank" 
@@ -329,7 +329,7 @@ export default function Home() {
                 className="btn" 
                 style={{ marginTop: '15px', display: 'inline-block' }}
               >
-                <i className="fas fa-external-link-alt"></i> Abrir Link de Onboarding
+                <i className="fas fa-external-link-alt"></i> Open Onboarding Link
               </a>
               <div style={{ marginTop: '15px', fontSize: '0.9rem' }}>
                 <strong>URL:</strong><br/>
@@ -343,24 +343,24 @@ export default function Home() {
         <div className="card">
           <div className="card-header">
             <i className="fas fa-credit-card"></i>
-            <h2>Payment Intent - Pagamento Customizado</h2>
+            <h2>Payment Intent - Custom Payment</h2>
           </div>
           <div className="info">
             <h4 style={{ color: '#0c5460', margin: '0 0 10px 0' }}>
-              <i className="fas fa-info-circle"></i> Como Funciona o Payment Intent
+              <i className="fas fa-info-circle"></i> How Payment Intent Works
             </h4>
             <div style={{ fontSize: '0.9rem' }}>
               <p style={{ margin: '5px 0' }}>
-                <strong>🎯 Uso:</strong> Para integração customizada no seu site/app com controle total
+                <strong>🎯 Use:</strong> For custom integration in your site/app with full control
               </p>
               <p style={{ margin: '5px 0' }}>
-                <strong>💡 Fluxo:</strong> Cria intenção → Cliente confirma pagamento → Dinheiro transferido
+                <strong>💡 Flow:</strong> Create intent → Customer confirms payment → Money transferred
               </p>
             </div>
           </div>
           <div className="form-group">
             <label htmlFor="amount">
-              <i className="fas fa-dollar-sign"></i> Valor (centavos)
+              <i className="fas fa-dollar-sign"></i> Amount (cents)
             </label>
             <input
               type="number"
@@ -373,16 +373,16 @@ export default function Home() {
             <small style={{ color: '#666' }}>Ex: 2000 = $20.00</small>
           </div>
           <div className="form-group">
-            <label htmlFor="currency"><i className="fas fa-coins"></i> Moeda</label>
+            <label htmlFor="currency"><i className="fas fa-coins"></i> Currency</label>
             <select id="currency" name="currency">
-              <option value="usd">USD - Dólar Americano</option>
-              <option value="brl">BRL - Real Brasileiro</option>
+              <option value="usd">USD - US Dollar</option>
+              <option value="brl">BRL - Brazilian Real</option>
               <option value="eur">EUR - Euro</option>
             </select>
           </div>
           <div className="form-group">
             <label htmlFor="connectedAccountId">
-              <i className="fas fa-link"></i> Conta Conectada
+              <i className="fas fa-link"></i> Connected Account
             </label>
             <input
               type="text"
@@ -397,20 +397,20 @@ export default function Home() {
             onClick={createPaymentIntent}
             disabled={loading === 'createPayment'}
           >
-            {loading !== 'createPayment' && <><i className="fas fa-money-bill-wave"></i> Criar Payment Intent</>}
+            {loading !== 'createPayment' && <><i className="fas fa-money-bill-wave"></i> Create Payment Intent</>}
           </button>
           <div id="createPaymentResult" className="result" style={{ display: 'none' }}></div>
         </div>
 
-        {/* Transferência */}
+        {/* Transfer */}
         <div className="card">
           <div className="card-header">
             <i className="fas fa-exchange-alt"></i>
-            <h2>Transferência</h2>
+            <h2>Transfer</h2>
           </div>
           <div className="form-group">
             <label htmlFor="transferAmount">
-              <i className="fas fa-dollar-sign"></i> Valor (centavos)
+              <i className="fas fa-dollar-sign"></i> Amount (cents)
             </label>
             <input
               type="number"
@@ -421,7 +421,7 @@ export default function Home() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="transferCurrency"><i className="fas fa-coins"></i> Moeda</label>
+            <label htmlFor="transferCurrency"><i className="fas fa-coins"></i> Currency</label>
             <select id="transferCurrency" name="currency">
               <option value="usd">USD</option>
               <option value="brl">BRL</option>
@@ -430,7 +430,7 @@ export default function Home() {
           </div>
           <div className="form-group">
             <label htmlFor="destinationAccount">
-              <i className="fas fa-user"></i> Conta Destino
+              <i className="fas fa-user"></i> Destination Account
             </label>
             <input
               type="text"
@@ -446,7 +446,7 @@ export default function Home() {
             disabled={loading === 'createTransfer'}
             style={{ background: 'linear-gradient(135deg, #20c997 0%, #28a745 100%)' }}
           >
-            {loading !== 'createTransfer' && <><i className="fas fa-paper-plane"></i> Enviar Transferência</>}
+            {loading !== 'createTransfer' && <><i className="fas fa-paper-plane"></i> Send Transfer</>}
           </button>
           <div id="createTransferResult" className="result" style={{ display: 'none' }}></div>
         </div>
@@ -455,25 +455,25 @@ export default function Home() {
         <div className="card full-width">
           <div className="card-header">
             <i className="fas fa-shopping-cart"></i>
-            <h2>Como o Cliente Paga?</h2>
+            <h2>How Does the Customer Pay?</h2>
           </div>
           <div className="info">
             <i className="fas fa-lightbulb"></i>
-            Depois de criar uma conta Connect, use estas opções para que os clientes do vendedor possam pagar!
+            After creating a Connect account, use these options so the seller's customers can pay!
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '20px', marginTop: '20px' }}>
             <div style={{ padding: '20px', background: '#f0e5ff', borderRadius: '8px', border: '2px solid #9b59b6' }}>
               <div style={{ display: 'inline-block', padding: '4px 8px', background: '#9b59b6', color: 'white', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '10px' }}>
-                NOVO! 🚀
+                NEW! 🚀
               </div>
               <h3 style={{ color: '#6c3483', marginBottom: '15px' }}>
                 <i className="fas fa-tablet-alt"></i> Embedded Checkout
               </h3>
               <p style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
-                Checkout integrado na sua página (sem redirect!)
+                Checkout integrated in your page (no redirect!)
               </p>
               <a href="/payments/embedded" className="btn" style={{ background: '#9b59b6', textDecoration: 'none' }}>
-                <i className="fas fa-tablet-alt"></i> Ver Embedded
+                <i className="fas fa-tablet-alt"></i> View Embedded
               </a>
             </div>
             <div style={{ padding: '20px', background: '#e7f3ff', borderRadius: '8px', border: '2px solid #007bff' }}>
@@ -481,10 +481,10 @@ export default function Home() {
                 <i className="fas fa-external-link-alt"></i> Stripe Checkout
               </h3>
               <p style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
-                Página de pagamento hospedada pelo Stripe (mais fácil)
+                Payment page hosted by Stripe (easier)
               </p>
               <a href="/payments/checkout" className="btn" style={{ background: '#007bff', textDecoration: 'none' }}>
-                <i className="fas fa-external-link-alt"></i> Criar Checkout
+                <i className="fas fa-external-link-alt"></i> Create Checkout
               </a>
             </div>
             <div style={{ padding: '20px', background: '#e8f5e8', borderRadius: '8px', border: '2px solid #28a745' }}>
@@ -492,31 +492,31 @@ export default function Home() {
                 <i className="fas fa-link"></i> Payment Link
               </h3>
               <p style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
-                Link direto para pagamento (WhatsApp, email, etc.)
+                Direct payment link (WhatsApp, email, etc.)
               </p>
               <a href="/payments/payment-link" className="btn" style={{ background: '#28a745', textDecoration: 'none' }}>
-                <i className="fas fa-link"></i> Gerar Link
+                <i className="fas fa-link"></i> Generate Link
               </a>
             </div>
             <div style={{ padding: '20px', background: '#fff3cd', borderRadius: '8px', border: '2px solid #ffc107' }}>
               <h3 style={{ color: '#856404', marginBottom: '15px' }}>
-                <i className="fas fa-rocket"></i> Demo Completa
+                <i className="fas fa-rocket"></i> Full Demo
               </h3>
               <p style={{ fontSize: '0.9rem', marginBottom: '15px' }}>
-                Veja o fluxo completo com iframe do pagamento
+                See the complete flow with payment preview
               </p>
               <a href="/payments/demo" className="btn" style={{ background: '#ffc107', color: '#856404', textDecoration: 'none' }}>
-                <i className="fas fa-rocket"></i> Ver Demo
+                <i className="fas fa-rocket"></i> View Demo
               </a>
             </div>
           </div>
         </div>
 
-        {/* Contas Conectadas */}
+        {/* Connected Accounts */}
         <div className="card full-width accounts-list">
           <div className="card-header">
             <i className="fas fa-users"></i>
-            <h2>Contas Conectadas</h2>
+            <h2>Connected Accounts</h2>
             <button 
               onClick={loadAccounts} 
               className="btn"
@@ -527,13 +527,13 @@ export default function Home() {
                 marginLeft: 'auto'
               }}
             >
-              <i className="fas fa-sync"></i> Recarregar
+              <i className="fas fa-sync"></i> Reload
             </button>
           </div>
           {accounts.length === 0 ? (
             <p style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
               <i className="fas fa-inbox"></i><br />
-              Nenhuma conta encontrada. Crie sua primeira conta acima!
+              No accounts found. Create your first account above!
             </p>
           ) : (
             accounts.map((account) => (
@@ -541,13 +541,13 @@ export default function Home() {
                 <div className="account-header">
                   <span className="account-id">{account.id}</span>
                   <span className={`status-badge ${account.charges_enabled ? 'status-active' : 'status-pending'}`}>
-                    {account.charges_enabled ? 'Ativa' : 'Pendente'}
+                    {account.charges_enabled ? 'Active' : 'Pending'}
                   </span>
                 </div>
                 <div>
                   <strong>Email:</strong> {account.email || 'N/A'}<br />
-                  <strong>País:</strong> {account.country}<br />
-                  <strong>Tipo:</strong> {account.type}
+                  <strong>Country:</strong> {account.country}<br />
+                  <strong>Type:</strong> {account.type}
                 </div>
               </div>
             ))

@@ -87,27 +87,27 @@ export default function PaymentDemoPage() {
     <>
       <div className="header">
         <h1>
-          <i className="fas fa-rocket"></i> Demonstração de Fluxo de Pagamento
+          <i className="fas fa-rocket"></i> Payment Flow Demonstration
         </h1>
-        <p>Crie um pagamento e veja a página que o cliente final verá</p>
+        <p>Create a payment and see the page the end customer will see</p>
       </div>
 
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <a href="/" className="btn" style={{ marginBottom: '20px', background: '#6c757d', display: 'inline-block', width: 'auto', padding: '10px 20px' }}>
-          <i className="fas fa-arrow-left"></i> Voltar
+          <i className="fas fa-arrow-left"></i> Back
         </a>
 
         <div className="info" style={{ marginBottom: '20px' }}>
           <i className="fas fa-info-circle"></i>
-          <strong>Como funciona:</strong> Você (dono da plataforma) cria um pagamento com taxa. Do lado direito aparece o iframe com a página que seu cliente final verá para fazer o pagamento.
+          <strong>How it works:</strong> You (platform owner) create a payment with a fee. On the right side appears the iframe with the page your end customer will see to make the payment.
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: paymentUrl ? '1fr 1fr' : '1fr', gap: '20px' }}>
-          {/* Formulário */}
+          {/* Form */}
           <div className="card">
             <div className="card-header">
               <i className="fas fa-cog"></i>
-              <h2>Configurar Pagamento</h2>
+              <h2>Configure Payment</h2>
             </div>
 
             <div className="form-group">
@@ -119,13 +119,13 @@ export default function PaymentDemoPage() {
                 onChange={(e) => setPaymentType(e.target.value as 'checkout' | 'link')}
                 style={{ width: '100%', padding: '12px 15px', border: '2px solid #e1e5e9', borderRadius: '8px', fontSize: '16px' }}
               >
-                <option value="checkout">Checkout Session (Sessão única)</option>
-                <option value="link">Payment Link (Link reutilizável)</option>
+                <option value="checkout">Checkout Session (Single session)</option>
+                <option value="link">Payment Link (Reusable link)</option>
               </select>
               <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>
                 {paymentType === 'checkout' 
-                  ? '✓ Melhor para pagamentos únicos' 
-                  : '✓ Melhor para compartilhar link (WhatsApp, email)'}
+                  ? '✓ Better for single payments' 
+                  : '✓ Better for sharing link (WhatsApp, email)'}
               </small>
             </div>
 
@@ -148,7 +148,7 @@ export default function PaymentDemoPage() {
                 <i className="fas fa-coins"></i> Moeda
               </label>
               <select id="demoCurrency">
-                <option value="usd">USD - Dólar Americano</option>
+                <option value="usd">USD - US Dollar</option>
                 <option value="eur">EUR - Euro</option>
                 <option value="brl">BRL - Real Brasileiro</option>
               </select>
@@ -177,17 +177,17 @@ export default function PaymentDemoPage() {
                 min="0"
                 placeholder="500"
               />
-              <small style={{ color: '#666' }}>Ex: 500 = $5.00 de comissão</small>
+              <small style={{ color: '#666' }}>Ex: 500 = $5.00 commission</small>
             </div>
 
             <div className="form-group">
               <label htmlFor="demoProductName">
-                <i className="fas fa-box"></i> Nome do Produto/Serviço
+                <i className="fas fa-box"></i> Product/Service Name
               </label>
               <input
                 type="text"
                 id="demoProductName"
-                defaultValue="Produto Premium"
+                defaultValue="Premium Product"
                 placeholder="Nome do produto"
               />
             </div>
@@ -205,7 +205,7 @@ export default function PaymentDemoPage() {
               </strong>
               <div style={{ fontSize: '0.9rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                  <span>Cliente paga:</span>
+                  <span>Customer pays:</span>
                   <strong>$50.00</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', color: '#635bff' }}>
@@ -213,7 +213,7 @@ export default function PaymentDemoPage() {
                   <strong>- $5.00</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '5px', borderTop: '1px solid #dee2e6' }}>
-                  <span>Vendedor recebe:</span>
+                  <span>Seller receives:</span>
                   <strong style={{ color: '#28a745' }}>$45.00</strong>
                 </div>
               </div>
@@ -249,13 +249,13 @@ export default function PaymentDemoPage() {
             {paymentInfo && (
               <div className="result success" style={{ display: 'block', marginTop: '15px' }}>
                 <strong>✅ Pagamento criado!</strong><br/>
-                <strong>Tipo:</strong> {paymentInfo.type}<br/>
+                <strong>Type:</strong> {paymentInfo.type}<br/>
                 <strong>ID:</strong> <code style={{ fontSize: '0.85rem' }}>{paymentInfo.id}</code><br/>
                 <div style={{ marginTop: '10px', padding: '10px', background: '#e8f5e9', borderRadius: '4px' }}>
                   <small>
-                    Cliente paga: <strong>${paymentInfo.amount}</strong> {paymentInfo.currency}<br/>
-                    Sua comissão: <strong style={{ color: '#635bff' }}>${paymentInfo.fee}</strong><br/>
-                    Vendedor recebe: <strong style={{ color: '#28a745' }}>${paymentInfo.seller}</strong>
+                    Customer pays: <strong>${paymentInfo.amount}</strong> {paymentInfo.currency}<br/>
+                    Your commission: <strong style={{ color: '#635bff' }}>${paymentInfo.fee}</strong><br/>
+                    Seller receives: <strong style={{ color: '#28a745' }}>${paymentInfo.seller}</strong>
                   </small>
                 </div>
               </div>
@@ -267,13 +267,13 @@ export default function PaymentDemoPage() {
             <div className="card" style={{ minHeight: '600px' }}>
               <div className="card-header">
                 <i className="fas fa-desktop"></i>
-                <h2>Visão do Cliente Final</h2>
+                <h2>End Customer View</h2>
               </div>
               
               <div className="warning" style={{ marginBottom: '15px' }}>
                 <i className="fas fa-info-circle"></i>
-                <strong>Nota:</strong> Por questões de segurança, o Stripe pode bloquear o carregamento em iframe. 
-                Use o botão abaixo para abrir em nova aba e ver a experiência completa.
+                <strong>Note:</strong> For security reasons, Stripe may block iframe loading. 
+                Use the button below to open in a new tab and see the complete experience.
               </div>
 
               <a 
@@ -289,7 +289,7 @@ export default function PaymentDemoPage() {
                   padding: '15px 30px'
                 }}
               >
-                <i className="fas fa-external-link-alt"></i> Abrir Página de Pagamento (Nova Aba)
+                <i className="fas fa-external-link-alt"></i> Open Payment Page (New Tab)
               </a>
 
               <div style={{ 
@@ -300,16 +300,16 @@ export default function PaymentDemoPage() {
                 border: '2px solid #e9ecef'
               }}>
                 <strong style={{ display: 'block', marginBottom: '10px' }}>
-                  <i className="fas fa-eye"></i> Preview da Página:
+                  <i className="fas fa-eye"></i> Page Preview:
                 </strong>
                 <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '10px' }}>
-                  O cliente final verá uma página segura do Stripe com:
+                  The end customer will see a secure Stripe page with:
                 </p>
                 <ul style={{ fontSize: '0.9rem', color: '#666', marginLeft: '20px' }}>
-                  <li>✓ Formulário de pagamento profissional</li>
-                  <li>✓ Múltiplos métodos de pagamento (Cartão, Multibanco para EUR, etc.)</li>
-                  <li>✓ Informações do produto e preço</li>
-                  <li>✓ Conexão 100% segura (SSL)</li>
+                  <li>✓ Professional payment form</li>
+                  <li>✓ Multiple payment methods (Card, Multibanco for EUR, etc.)</li>
+                  <li>✓ Product and price information</li>
+                  <li>✓ 100% secure connection (SSL)</li>
                 </ul>
               </div>
 
@@ -343,11 +343,11 @@ export default function PaymentDemoPage() {
                       {paymentInfo?.amount && `$${paymentInfo.amount} ${paymentInfo.currency}`}
                     </h2>
                     <p style={{ color: '#666', fontSize: '0.9rem' }}>
-                      <i className="fas fa-box"></i> {(document.getElementById('demoProductName') as HTMLInputElement)?.value || 'Produto Premium'}
+                      <i className="fas fa-box"></i> {(document.getElementById('demoProductName') as HTMLInputElement)?.value || 'Premium Product'}
                     </p>
                   </div>
 
-                  {/* Simulação dos campos */}
+                  {/* Field simulation */}
                   <div style={{ marginBottom: '20px' }}>
                     <div style={{ 
                       background: '#f6f9fc', 
@@ -386,10 +386,10 @@ export default function PaymentDemoPage() {
                         marginBottom: '15px'
                       }}>
                         <label style={{ fontSize: '0.85rem', color: '#2e7d32', display: 'block', marginBottom: '5px' }}>
-                          <i className="fas fa-mobile-alt"></i> Multibanco disponível
+                          <i className="fas fa-mobile-alt"></i> Multibanco available
                         </label>
                         <div style={{ fontSize: '0.8rem', color: '#388e3c' }}>
-                          ✓ Pagamento por referência Multibanco
+                          ✓ Payment by Multibanco reference
                         </div>
                       </div>
                     )}
@@ -433,14 +433,14 @@ export default function PaymentDemoPage() {
                 border: '1px solid #bee5eb'
               }}>
                 <i className="fas fa-info-circle" style={{ color: '#0c5460' }}></i>
-                <strong style={{ color: '#0c5460' }}> Por que o iframe não carrega?</strong>
+                <strong style={{ color: '#0c5460' }}> Why doesn't the iframe load?</strong>
                 <p style={{ fontSize: '0.85rem', color: '#0c5460', margin: '5px 0 0 0' }}>
-                  O Stripe bloqueia propositalmente iframes por segurança (proteção contra clickjacking). 
-                  O mockup acima mostra como será a aparência. Use o botão para abrir a página real em nova aba.
+                  Stripe purposely blocks iframes for security (protection against clickjacking). 
+                  The mockup above shows what it will look like. Use the button to open the real page in a new tab.
                 </p>
               </div>
               <div style={{ marginTop: '15px', fontSize: '0.85rem', color: '#666' }}>
-                <strong>URL do Pagamento:</strong><br/>
+                <strong>Payment URL:</strong><br/>
                 <div className="url-display" style={{ marginTop: '5px', fontSize: '0.75rem' }}>
                   {paymentUrl}
                 </div>
