@@ -1,15 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { loadStripe, Stripe } from '@stripe/stripe-js'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 const STRIPE_PK = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_key'
 
-declare global {
-  interface Window {
-    Stripe: any;
-  }
-}
+// Inicializar Stripe de forma adequada
+const stripePromise = loadStripe(STRIPE_PK)
 
 export default function EmbeddedCheckoutPage() {
   const [loading, setLoading] = useState(false)
@@ -68,14 +66,18 @@ export default function EmbeddedCheckoutPage() {
   }
 
   useEffect(() => {
-    if (clientSecret && window.Stripe) {
+    if (clientSecret) {
       mountEmbeddedCheckout()
     }
   }, [clientSecret])
 
   const mountEmbeddedCheckout = async () => {
     try {
-      const stripe = window.Stripe(STRIPE_PK)
+      const stripe = await stripePromise
+      
+      if (!stripe) {
+        throw new Error('Stripe failed to initialize')
+      }
       
       // Clear the container completely before mounting
       const container = document.getElementById('checkout-container')
@@ -91,7 +93,7 @@ export default function EmbeddedCheckoutPage() {
       setCheckoutMounted(true)
     } catch (error) {
       console.error('Error mounting checkout:', error)
-      setError('Error loading checkout: ' + error.message)
+      setError('Error loading checkout: ' + (error as Error).message)
     }
   }
 
