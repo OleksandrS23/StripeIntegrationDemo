@@ -84,10 +84,15 @@ export class ConnectAccountController {
   @Post('account-links')
   async createAccountLink(@Body() createAccountLinkDto: CreateAccountLinkDto) {
     try {
+      const refreshUrl = createAccountLinkDto.refreshUrl || 
+        `${process.env.APP_URL || 'http://localhost:3000'}/connect/refresh`;
+      const returnUrl = createAccountLinkDto.returnUrl || 
+        `${process.env.APP_URL || 'http://localhost:3000'}/connect/return`;
+
       const accountLink = await this.stripeService.createAccountLink(
         createAccountLinkDto.accountId,
-        createAccountLinkDto.refreshUrl,
-        createAccountLinkDto.returnUrl,
+        refreshUrl,
+        returnUrl,
       );
       return {
         success: true,

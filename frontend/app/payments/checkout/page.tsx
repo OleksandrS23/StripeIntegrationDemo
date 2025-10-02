@@ -1,233 +1,178 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import Layout from '@/components/Layout'
-import Card from '@/components/Card'
-import Button from '@/components/Button'
-import Alert from '@/components/Alert'
-import { checkoutAPI } from '@/lib/api'
+import { useState } from 'react'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 export default function CheckoutPage() {
-  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string>('')
 
-  const [formData, setFormData] = useState({
-    amount: 2000,
-    currency: 'usd',
-    connectedAccountId: '',
-    applicationFeeAmount: 200,
-    productName: 'Produto Teste',
-    customerEmail: '',
-  })
-
-  useEffect(() => {
-    const accountId = searchParams.get('accountId')
-    if (accountId) {
-      setFormData((prev) => ({ ...formData, connectedAccountId: accountId }))
-    }
-  }, [searchParams])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const createCheckout = async () => {
     setLoading(true)
-    setError(null)
     setResult(null)
+    setError('')
+    
+    const amount = parseInt((document.getElementById('checkoutAmount') as HTMLInputElement).value)
+    const currency = (document.getElementById('checkoutCurrency') as HTMLSelectElement).value
+    const connectedAccountId = (document.getElementById('checkoutAccountId') as HTMLInputElement).value
+    const applicationFeeAmount = parseInt((document.getElementById('checkoutFee') as HTMLInputElement).value)
+    const productName = (document.getElementById('productName') as HTMLInputElement).value
 
     try {
-      const response = await checkoutAPI.createCheckoutSession(formData)
-      if (response.success) {
-        setResult(response.data)
+      const response = await fetch(`${API_URL}/stripe/checkout/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          amount, 
+          currency, 
+          connectedAccountId,
+          applicationFeeAmount,
+          productName
+        })
+      })
+      const data = await response.json()
+      console.log('📦 Resposta do checkout:', data)
+      
+      if (response.ok && data.success) {
+        console.log('✅ Sucesso! SessionId:', data.data.sessionId, 'URL:', data.data.url)
+        setResult(data.data)
       } else {
-        setError(response.error)
+        setError(data.error || data.message || 'Erro ao criar checkout')
       }
     } catch (err: any) {
-      setError(
-        err.response?.data?.message || err.message || 'Erro ao criar Checkout Session',
-      )
+      console.error('❌ Erro:', err)
+      setError(err.message)
     } finally {
       setLoading(false)
     }
   }
 
-  const sellerAmount = formData.amount - formData.applicationFeeAmount
-
   return (
-    <Layout
-      title="Checkout Session"
-      description="Página de pagamento hospedada pelo Stripe"
-    >
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <Card>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  💰 Valor (centavos)
-                </label>
-                <input
-                  type="number"
-                  required
-                  min="50"
-                  value={formData.amount}
-                  onChange={(e) =>
-                    setFormData({ ...formData, amount: parseInt(e.target.value) })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+    <>
+      <div className="header">
+        <h1>
+          <i className="fas fa-shopping-cart"></i> Stripe Checkout
+        </h1>
+        <p>Página de pagamento hospedada pelo Stripe</p>
+      </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  💱 Moeda
-                </label>
-                <select
-                  value={formData.currency}
-                  onChange={(e) =>
-                    setFormData({ ...formData, currency: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                >
-                  <option value="usd">USD - Dólar</option>
-                  <option value="brl">BRL - Real</option>
-                  <option value="eur">EUR - Euro</option>
-                </select>
-              </div>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <a href="/" className="btn" style={{ marginBottom: '20px', background: '#6c757d', display: 'inline-block', width: 'auto', padding: '10px 20px' }}>
+          <i className="fas fa-arrow-left"></i> Voltar
+        </a>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🔗 Conta Conectada
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.connectedAccountId}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      connectedAccountId: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono"
-                  placeholder="acct_..."
-                />
-              </div>
+        <div className="card">
+          <div className="card-header">
+            <i className="fas fa-external-link-alt"></i>
+            <h2>Criar Checkout Session</h2>
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  💸 Taxa da Plataforma (centavos)
-                </label>
-                <input
-                  type="number"
-                  required
-                  min="0"
-                  value={formData.applicationFeeAmount}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      applicationFeeAmount: parseInt(e.target.value),
-                    })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+          <div className="info">
+            <i className="fas fa-info-circle"></i>
+            <strong>Vantagens:</strong> Página segura hospedada pelo Stripe, design responsivo, múltiplos métodos de pagamento.
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📦 Nome do Produto
-                </label>
-                <input
-                  type="text"
-                  value={formData.productName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, productName: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+          <div className="form-group">
+            <label htmlFor="checkoutAmount">
+              <i className="fas fa-dollar-sign"></i> Valor (centavos)
+            </label>
+            <input
+              type="number"
+              id="checkoutAmount"
+              defaultValue="2000"
+              min="50"
+              placeholder="2000"
+            />
+            <small style={{ color: '#666' }}>Ex: 2000 = $20.00</small>
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📧 Email do Cliente (opcional)
-                </label>
-                <input
-                  type="email"
-                  value={formData.customerEmail}
-                  onChange={(e) =>
-                    setFormData({ ...formData, customerEmail: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+          <div className="form-group">
+            <label htmlFor="checkoutCurrency">
+              <i className="fas fa-coins"></i> Moeda
+            </label>
+            <select id="checkoutCurrency">
+              <option value="usd">USD - Dólar Americano</option>
+              <option value="brl">BRL - Real Brasileiro</option>
+              <option value="eur">EUR - Euro</option>
+            </select>
+          </div>
 
-              <Button type="submit" isLoading={loading} fullWidth>
-                🛒 Criar Checkout Session
-              </Button>
-            </form>
-          </Card>
-        </div>
+          <div className="form-group">
+            <label htmlFor="checkoutAccountId">
+              <i className="fas fa-link"></i> Conta Conectada
+            </label>
+            <input
+              type="text"
+              id="checkoutAccountId"
+              placeholder="acct_1234567890"
+            />
+          </div>
 
-        <div className="space-y-6">
-          <Card title="📊 Resumo">
-            <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b">
-                <span>Valor Total:</span>
-                <strong>${(formData.amount / 100).toFixed(2)}</strong>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span>Taxa Plataforma:</span>
-                <strong className="text-purple-600">
-                  ${(formData.applicationFeeAmount / 100).toFixed(2)}
-                </strong>
-              </div>
-              <div className="flex justify-between py-2">
-                <span>Vendedor Recebe:</span>
-                <strong className="text-green-600">
-                  ${(sellerAmount / 100).toFixed(2)}
-                </strong>
-              </div>
-            </div>
-          </Card>
+          <div className="form-group">
+            <label htmlFor="checkoutFee">
+              <i className="fas fa-percentage"></i> Taxa da Plataforma (centavos)
+            </label>
+            <input
+              type="number"
+              id="checkoutFee"
+              defaultValue="200"
+              min="0"
+              placeholder="200"
+            />
+            <small style={{ color: '#666' }}>Ex: 200 = $2.00 de taxa</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="productName">
+              <i className="fas fa-box"></i> Nome do Produto
+            </label>
+            <input
+              type="text"
+              id="productName"
+              defaultValue="Produto Teste"
+              placeholder="Produto Teste"
+            />
+          </div>
+
+          <button 
+            type="button" 
+            className={`btn ${loading ? 'loading' : ''}`}
+            onClick={createCheckout}
+            disabled={loading}
+            style={{ background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)' }}
+          >
+            {!loading && <><i className="fas fa-shopping-cart"></i> Criar Checkout Session</>}
+          </button>
 
           {error && (
-            <Alert type="error" title="Erro">
-              {error}
-            </Alert>
+            <div className="result error" style={{ display: 'block' }}>
+              <strong>❌ Erro:</strong> {error}
+            </div>
           )}
 
           {result && (
-            <Alert type="success" title="Checkout Session Criado!">
-              <div className="space-y-3 mt-3">
-                <p>
-                  <strong>Session ID:</strong> {result.sessionId}
-                </p>
-                <Button
-                  onClick={() => window.open(result.url, '_blank')}
-                  fullWidth
-                  variant="success"
-                >
-                  🚀 Abrir Página de Pagamento
-                </Button>
-                <p className="text-sm text-green-800">
-                  Compartilhe este link com o cliente para que ele possa pagar
-                </p>
+            <div className="result success" style={{ display: 'block' }}>
+              <strong>✅ Checkout Session criado!</strong><br/>
+              <strong>Session ID:</strong> <code>{result.sessionId}</code><br/>
+              <a 
+                href={result.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn" 
+                style={{ marginTop: '15px', display: 'inline-block' }}
+              >
+                <i className="fas fa-external-link-alt"></i> Abrir Página de Pagamento
+              </a>
+              <div style={{ marginTop: '15px', fontSize: '0.9rem' }}>
+                <strong>URL:</strong><br/>
+                <div className="url-display">{result.url}</div>
               </div>
-            </Alert>
+            </div>
           )}
-
-          <Card title="✨ Vantagens do Checkout">
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>✅ Página segura hospedada pelo Stripe</li>
-              <li>✅ Design responsivo e otimizado</li>
-              <li>✅ Suporte a múltiplos métodos de pagamento</li>
-              <li>✅ Não requer integração de frontend complexa</li>
-            </ul>
-          </Card>
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
-

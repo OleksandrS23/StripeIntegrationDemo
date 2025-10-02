@@ -1,4 +1,4 @@
-import { IsString, IsUrl } from 'class-validator';
+import { IsString, IsUrl, IsOptional } from 'class-validator';
 
 /**
  * DTO for creating an account onboarding link
@@ -7,10 +7,12 @@ export class CreateAccountLinkDto {
   @IsString()
   accountId: string;
 
-  @IsUrl()
-  refreshUrl: string;
+  @IsOptional()
+  @IsUrl({ require_tld: false })
+  refreshUrl?: string;
 
-  @IsUrl()
-  returnUrl: string;
+  @IsOptional()
+  @IsUrl({ require_tld: false })
+  returnUrl?: string;
 }
 

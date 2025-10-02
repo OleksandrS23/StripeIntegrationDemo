@@ -32,7 +32,7 @@ export default function CreateAccountPage() {
         setError(response.error)
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Erro ao criar conta')
+      setError(err.response?.data?.message || err.message || 'Error creating account')
     } finally {
       setLoading(false)
     }
@@ -40,15 +40,16 @@ export default function CreateAccountPage() {
 
   return (
     <Layout
-      title="Criar Conta Connect"
-      description="Crie uma nova conta de vendedor na plataforma"
+      title="Create Connect Account"
+      description="Create a new seller account on the platform"
     >
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <Card>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                📧 Email do Vendedor
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-base font-bold text-gray-800">
+                <span className="text-2xl">📧</span>
+                Seller Email
               </label>
               <input
                 type="email"
@@ -57,35 +58,37 @@ export default function CreateAccountPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="vendedor@exemplo.com"
+                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-base font-medium hover:border-purple-300"
+                placeholder="seller@example.com"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                🌍 País
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-base font-bold text-gray-800">
+                <span className="text-2xl">🌍</span>
+                Country
               </label>
               <select
                 value={formData.country}
                 onChange={(e) =>
                   setFormData({ ...formData, country: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-base font-medium hover:border-purple-300 bg-white cursor-pointer"
               >
-                <option value="US">🇺🇸 Estados Unidos</option>
-                <option value="BR">🇧🇷 Brasil</option>
-                <option value="CA">🇨🇦 Canadá</option>
-                <option value="GB">🇬🇧 Reino Unido</option>
-                <option value="DE">🇩🇪 Alemanha</option>
-                <option value="FR">🇫🇷 França</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="BR">🇧🇷 Brazil</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
                 <option value="PT">🇵🇹 Portugal</option>
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ⚙️ Tipo de Conta
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-base font-bold text-gray-800">
+                <span className="text-2xl">⚙️</span>
+                Account Type
               </label>
               <select
                 value={formData.type}
@@ -95,55 +98,68 @@ export default function CreateAccountPage() {
                     type: e.target.value as 'express' | 'standard' | 'custom',
                   })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-base font-medium hover:border-purple-300 bg-white cursor-pointer"
               >
-                <option value="express">Express (Recomendado - Mais Simples)</option>
-                <option value="standard">Standard (Mais Controle)</option>
-                <option value="custom">Custom (Máxima Customização)</option>
+                <option value="express">Express (Recommended - Simpler)</option>
+                <option value="standard">Standard (More Control)</option>
+                <option value="custom">Custom (Maximum Customization)</option>
               </select>
             </div>
 
             <Button type="submit" isLoading={loading} fullWidth>
-              ➕ Criar Conta Connect
+              <span className="flex items-center justify-center gap-2">
+                <span className="text-xl">➕</span>
+                Create Connect Account
+              </span>
             </Button>
           </form>
 
           {error && (
-            <div className="mt-6">
-              <Alert type="error" title="Erro ao criar conta">
+            <div className="mt-8">
+              <Alert type="error" title="Error creating account">
                 {error}
               </Alert>
             </div>
           )}
 
           {result && (
-            <div className="mt-6">
-              <Alert type="success" title="Conta criada com sucesso!">
-                <div className="space-y-2 mt-3">
-                  <p>
-                    <strong>ID da Conta:</strong>{' '}
-                    <code className="bg-gray-100 px-2 py-1 rounded">{result.id}</code>
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {result.email}
-                  </p>
-                  <p>
-                    <strong>País:</strong> {result.country}
-                  </p>
-                  <p>
-                    <strong>Tipo:</strong> {result.type}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>{' '}
-                    {result.charges_enabled ? '✅ Ativo' : '⏳ Pendente Onboarding'}
-                  </p>
+            <div className="mt-8">
+              <Alert type="success" title="Account created successfully!">
+                <div className="space-y-3 mt-4">
+                  <div className="bg-white/50 p-4 rounded-lg">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">Account ID:</p>
+                    <code className="bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 rounded-lg font-mono text-sm font-bold text-purple-800 block">
+                      {result.id}
+                    </code>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-xs font-semibold text-gray-600">Email</p>
+                      <p className="font-bold text-gray-800">{result.email}</p>
+                    </div>
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-xs font-semibold text-gray-600">Country</p>
+                      <p className="font-bold text-gray-800">{result.country}</p>
+                    </div>
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-xs font-semibold text-gray-600">Type</p>
+                      <p className="font-bold text-gray-800 capitalize">{result.type}</p>
+                    </div>
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-xs font-semibold text-gray-600">Status</p>
+                      <p className="font-bold">
+                        {result.charges_enabled ? '✅ Active' : '⏳ Pending Onboarding'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-4">
+                <div className="mt-6">
                   <a
                     href={`/connect/onboarding?accountId=${result.id}`}
-                    className="text-purple-600 hover:text-purple-700 font-semibold"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
                   >
-                    → Ir para Onboarding
+                    <span>→</span>
+                    Go to Onboarding
                   </a>
                 </div>
               </Alert>
@@ -152,19 +168,29 @@ export default function CreateAccountPage() {
         </Card>
 
         {/* Info Card */}
-        <Card className="mt-6" title="ℹ️ Informações">
-          <div className="space-y-3 text-sm text-gray-600">
-            <p>
-              <strong>Express:</strong> Processo simplificado, ideal para começar rapidamente
-            </p>
-            <p>
-              <strong>Standard:</strong> Mais controle sobre a experiência do usuário
-            </p>
-            <p>
-              <strong>Custom:</strong> Controle total, requer implementação completa
+        <div className="grid md:grid-cols-3 gap-6 mt-8">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-purple-100 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="text-4xl mb-3">⚡</div>
+            <h3 className="font-bold text-lg mb-2 text-purple-700">Express</h3>
+            <p className="text-sm text-gray-600">
+              Simplified process, ideal for getting started quickly
             </p>
           </div>
-        </Card>
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-indigo-100 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="text-4xl mb-3">🎯</div>
+            <h3 className="font-bold text-lg mb-2 text-indigo-700">Standard</h3>
+            <p className="text-sm text-gray-600">
+              More control over the user experience
+            </p>
+          </div>
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-pink-100 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="text-4xl mb-3">🔧</div>
+            <h3 className="font-bold text-lg mb-2 text-pink-700">Custom</h3>
+            <p className="text-sm text-gray-600">
+              Total control, requires complete implementation
+            </p>
+          </div>
+        </div>
       </div>
     </Layout>
   )

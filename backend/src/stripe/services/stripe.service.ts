@@ -388,10 +388,21 @@ export class StripeService {
     cancelUrl: string,
     productName: string = 'Product',
     customerEmail?: string,
+    uiMode: 'hosted' | 'embedded' = 'hosted',
   ): Promise<Stripe.Checkout.Session> {
     try {
-      const session = await this.stripe.checkout.sessions.create({
-        payment_method_types: ['card', 'multibanco'],
+      // Métodos de pagamento baseados na moeda
+      const paymentMethods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] = ['card'];
+      
+      if (currency.toLowerCase() === 'eur') {
+        paymentMethods.push('multibanco');
+        paymentMethods.push('sepa_debit');
+      } else if (currency.toLowerCase() === 'brl') {
+        paymentMethods.push('boleto');
+      }
+      
+      const sessionParams: Stripe.Checkout.SessionCreateParams = {
+        payment_method_types: paymentMethods,
         line_items: [
           {
             price_data: {
@@ -405,8 +416,6 @@ export class StripeService {
           },
         ],
         mode: 'payment',
-        success_url: successUrl,
-        cancel_url: cancelUrl,
         payment_intent_data: {
           application_fee_amount: applicationFeeAmount,
           transfer_data: {
@@ -414,7 +423,18 @@ export class StripeService {
           },
         } as any,
         ...(customerEmail && { customer_email: customerEmail }),
-      });
+      };
+
+      // Adicionar URLs baseadas no modo
+      if (uiMode === 'embedded') {
+        sessionParams.ui_mode = 'embedded';
+        sessionParams.return_url = successUrl;
+      } else {
+        sessionParams.success_url = successUrl;
+        sessionParams.cancel_url = cancelUrl;
+      }
+
+      const session = await this.stripe.checkout.sessions.create(sessionParams);
 
       return session;
     } catch (error) {

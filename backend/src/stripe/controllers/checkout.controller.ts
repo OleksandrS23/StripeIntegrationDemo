@@ -34,15 +34,25 @@ export class CheckoutController {
         cancelUrl,
         createCheckoutSessionDto.productName || 'Product',
         createCheckoutSessionDto.customerEmail,
+        createCheckoutSessionDto.uiMode || 'hosted',
       );
+
+      console.log('🔍 Checkout Session criado:', {
+        id: session.id,
+        url: session.url,
+        status: session.status,
+      });
 
       return {
         success: true,
         data: {
           sessionId: session.id,
           url: session.url,
+          clientSecret: session.client_secret,
           message:
-            'Checkout session created! Customer can use this URL to pay.',
+            createCheckoutSessionDto.uiMode === 'embedded' 
+              ? 'Embedded checkout session created! Use clientSecret to mount the checkout.'
+              : 'Checkout session created! Customer can use this URL to pay.',
         },
       };
     } catch (error) {
@@ -56,8 +66,9 @@ export class CheckoutController {
   @Post('payment-links')
   async createPaymentLink(@Body() createPaymentLinkDto: CreatePaymentLinkDto) {
     try {
+      // Payment link direto: o vendedor recebe o valor total (sem taxa)
       const paymentLink = await this.stripeService.createPaymentLinkDirect(
-        createPaymentLinkDto.amount - createPaymentLinkDto.applicationFeeAmount,
+        createPaymentLinkDto.amount,
         createPaymentLinkDto.currency || 'usd',
         createPaymentLinkDto.connectedAccountId,
         createPaymentLinkDto.productName || 'Product',
@@ -71,14 +82,8 @@ export class CheckoutController {
           url: paymentLink.url,
           message:
             'Payment link created! Customer pays directly to connected account.',
-          note: `Product value: $${(
+          note: `Seller receives full amount: $${(
             createPaymentLinkDto.amount / 100
-          ).toFixed(2)} | Platform fee: $${(
-            createPaymentLinkDto.applicationFeeAmount / 100
-          ).toFixed(2)} | Seller receives: $${(
-            (createPaymentLinkDto.amount -
-              createPaymentLinkDto.applicationFeeAmount) /
-            100
           ).toFixed(2)}`,
         },
       };

@@ -16,9 +16,10 @@ export class CreatePaymentLinkDto {
   @IsString()
   connectedAccountId: string;
 
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  applicationFeeAmount: number;
+  applicationFeeAmount?: number;
 
   @IsOptional()
   @IsString()

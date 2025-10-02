@@ -42,6 +42,7 @@ stripe-connect-platform/
 ## 🎯 Features
 
 ### Connect Accounts
+
 - ✅ Create seller accounts (Express, Standard, Custom)
 - ✅ Complete onboarding process
 - ✅ List and account details
@@ -49,6 +50,7 @@ stripe-connect-platform/
 - ✅ Multiple country support
 
 ### Payments
+
 - ✅ **Payment Intent**: Custom payments with full control
 - ✅ **Checkout Session**: Stripe-hosted page
 - ✅ **Payment Link**: Shareable link for social media
@@ -61,6 +63,7 @@ stripe-connect-platform/
 ### Option 1: Docker (Recommended) 🐳
 
 **Prerequisites:**
+
 - Docker Desktop installed
 - Stripe account (test mode)
 
@@ -82,6 +85,7 @@ docker-compose up --build -d
 ```
 
 **Useful commands:**
+
 ```bash
 docker-compose up -d          # Start
 docker-compose down           # Stop
@@ -96,6 +100,7 @@ docker-compose ps             # Status
 ### Option 2: Manual (Node.js)
 
 **Prerequisites:**
+
 - Node.js 18+ installed
 - Stripe account (test mode)
 - Stripe API keys
@@ -140,31 +145,37 @@ Frontend will be running at `http://localhost:3000`
 ## 📖 Usage Guide
 
 ### 1. Create Connect Account
+
 1. Access `/connect/create-account`
 2. Fill in email, country, and account type
 3. Click "Create Connect Account"
 4. Note the generated Account ID
 
 ### 2. Complete Onboarding
+
 1. Access `/connect/onboarding`
 2. Paste the Account ID
 3. Click to generate onboarding link
 4. Complete the verification process
 
 ### 3. Create Payment
+
 Choose one of the methods:
 
 #### Payment Intent (Custom Integration)
+
 1. Access `/payments/payment-intent`
 2. Fill in payment details
 3. Use the returned client_secret to integrate with Stripe Elements
 
 #### Checkout Session (Hosted Page)
+
 1. Access `/payments/checkout`
 2. Fill in details
 3. Share the generated link with the customer
 
 #### Payment Link (For Social Media)
+
 1. Access `/payments/payment-link`
 2. Create the link
 3. Share via WhatsApp, Instagram, etc.
@@ -172,6 +183,7 @@ Choose one of the methods:
 ## 🔧 Environment Configuration
 
 ### Backend (.env)
+
 ```env
 STRIPE_SECRET_KEY=sk_test_your_secret_key
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
@@ -180,6 +192,7 @@ PORT=3001
 ```
 
 ### Frontend (.env.local)
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
@@ -187,17 +200,18 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 
 ## 🌍 Supported Countries and Currencies
 
-| Country | Code | Currency | Local Methods |
-|---------|------|----------|---------------|
-| 🇺🇸 United States | US | USD | Card |
-| 🇧🇷 Brazil | BR | BRL | Card, PIX |
-| 🇵🇹 Portugal | PT | EUR | Card, MB Way, Multibanco |
-| 🇬🇧 United Kingdom | GB | GBP | Card |
-| 🇩🇪 Germany | DE | EUR | Card, SEPA |
+| Country           | Code | Currency | Local Methods            |
+| ----------------- | ---- | -------- | ------------------------ |
+| 🇺🇸 United States  | US   | USD      | Card                     |
+| 🇧🇷 Brazil         | BR   | BRL      | Card, PIX                |
+| 🇵🇹 Portugal       | PT   | EUR      | Card, MB Way, Multibanco |
+| 🇬🇧 United Kingdom | GB   | GBP      | Card                     |
+| 🇩🇪 Germany        | DE   | EUR      | Card, SEPA               |
 
 ## 📚 API Endpoints
 
 ### Connect Accounts
+
 - `POST /stripe/connect/accounts` - Create account
 - `GET /stripe/connect/accounts` - List accounts
 - `GET /stripe/connect/accounts/:id` - Account details
@@ -205,19 +219,21 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 - `GET /stripe/connect/accounts/:id/balance` - View balance
 
 ### Payments
+
 - `POST /stripe/payments/payment-intents` - Create Payment Intent
 - `POST /stripe/payments/payment-intents/:id/confirm` - Confirm payment
 - `GET /stripe/payments/payment-intents/:id` - Payment Intent details
 - `POST /stripe/payments/transfers` - Create transfer
 
 ### Checkout
+
 - `POST /stripe/checkout/sessions` - Create Checkout Session
 - `POST /stripe/checkout/payment-links` - Create Payment Link
 - `POST /stripe/checkout/payment-intents-elements` - Payment Intent for Elements
 
 ## 💡 Tips
 
-1. **Test Mode**: Always use test keys (sk_test_...) during development
+1. **Test Mode**: Always use test keys (sk*test*...) during development
 2. **Onboarding**: Accounts must complete onboarding before receiving payments
 3. **Fees**: Configure application_fee_amount to retain your commission
 4. **Webhooks**: Configure webhooks to receive event notifications
@@ -225,14 +241,17 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 ## 🆘 Troubleshooting
 
 ### Error "Stripe API key not configured"
+
 - Verify environment variables are configured correctly
 - Make sure you're using real Stripe keys
 
 ### Account doesn't accept payments
+
 - Complete the onboarding process
 - Verify that charges_enabled is true
 
 ### CORS Error
+
 - Check if backend is running
 - Confirm that NEXT_PUBLIC_API_URL points to the correct backend
 

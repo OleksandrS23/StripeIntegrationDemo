@@ -1,8 +1,8 @@
-import { IsNumber, IsString, IsOptional, IsEmail, Min } from 'class-validator';
+import { IsNumber, IsString, IsOptional, IsEmail, Min, IsIn } from 'class-validator';
 
 /**
  * DTO for creating a Stripe Checkout Session
- * Used for hosted payment pages
+ * Used for hosted payment pages (ui_mode: 'hosted') or embedded checkout (ui_mode: 'embedded')
  */
 export class CreateCheckoutSessionDto {
   @IsNumber()
@@ -27,5 +27,9 @@ export class CreateCheckoutSessionDto {
   @IsOptional()
   @IsEmail()
   customerEmail?: string;
+
+  @IsOptional()
+  @IsIn(['hosted', 'embedded'])
+  uiMode?: 'hosted' | 'embedded' = 'hosted';
 }
 
