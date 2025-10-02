@@ -63,7 +63,6 @@ StripeIntegrationDemo/
 │   │   │   │   ├── create-account.dto.ts            # Account creation
 │   │   │   │   ├── create-account-link.dto.ts       # Onboarding links
 │   │   │   │   ├── create-payment-intent.dto.ts     # Payment Intents
-│   │   │   │   ├── create-mbway-payment.dto.ts      # MB Way payments
 │   │   │   │   ├── create-checkout-session.dto.ts   # Checkout Sessions
 │   │   │   │   ├── create-payment-link.dto.ts       # Payment Links
 │   │   │   │   └── index.ts                         # DTO exports

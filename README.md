@@ -340,7 +340,6 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 - `POST /stripe/payments/payment-intents/:id/confirm` - Confirm payment
 - `POST /stripe/payments/payment-intents/:id/cancel` - Cancel payment
 - `GET /stripe/payments/payment-intents/:id` - Get Payment Intent details
-- `POST /stripe/payments/payment-intents/mbway` - Create MB Way Payment Intent
 - `GET /stripe/payments/payment-methods/available` - Get available payment methods
 
 ### Checkout & Links

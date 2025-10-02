@@ -2,7 +2,6 @@ import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
 import { StripeService } from '../services/stripe.service';
 import {
   CreatePaymentIntentDto,
-  CreateMBWayPaymentIntentDto,
 } from '../dto';
 
 /**
@@ -143,55 +142,6 @@ export class PaymentController {
           total_methods: availableMethods.length,
         },
         message: `Found ${availableMethods.length} available payment methods.`,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-  }
-
-  @Post('payment-intents/mbway')
-  async createMBWayPaymentIntent(
-    @Body() createMBWayDto: CreateMBWayPaymentIntentDto,
-  ) {
-    try {
-      const paymentIntent = await this.stripeService.createMBWayPaymentIntent(
-        createMBWayDto.amount,
-        createMBWayDto.connectedAccountId,
-        createMBWayDto.applicationFeeAmount,
-        createMBWayDto.description,
-        createMBWayDto.customerEmail,
-        createMBWayDto.customerPhone,
-      );
-
-      const hasMultibanco =
-        paymentIntent.payment_method_types.includes('multibanco');
-      const hasMBWay = paymentIntent.payment_method_types.includes('mb_way');
-
-      let methodsDescription = 'Card';
-      if (hasMultibanco && hasMBWay) {
-        methodsDescription = 'MB Way, Multibanco and Card';
-      } else if (hasMultibanco) {
-        methodsDescription = 'Multibanco and Card';
-      }
-
-      return {
-        success: true,
-        data: {
-          id: paymentIntent.id,
-          client_secret: paymentIntent.client_secret,
-          status: paymentIntent.status,
-          amount: paymentIntent.amount,
-          currency: paymentIntent.currency,
-          application_fee_amount: paymentIntent.application_fee_amount,
-          metadata: paymentIntent.metadata,
-          description: paymentIntent.description,
-          created: paymentIntent.created,
-          payment_method_types: paymentIntent.payment_method_types,
-        },
-        message: `Portugal Payment Intent created! Supports: ${methodsDescription}`,
       };
     } catch (error) {
       return {

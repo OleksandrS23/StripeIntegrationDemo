@@ -223,90 +223,6 @@ export class StripeService {
     }
   }
 
-  async createMBWayPaymentIntent(
-    amount: number,
-    connectedAccountId: string,
-    applicationFeeAmount?: number,
-    description?: string,
-    customerEmail?: string,
-    customerPhone?: string,
-  ): Promise<Stripe.PaymentIntent> {
-    const methodsToTry = [
-      ['card', 'multibanco', 'mb_way'],
-      ['card', 'multibanco'],
-      ['card'],
-    ];
-
-    let lastError: Error | null = null;
-
-    for (const methods of methodsToTry) {
-      try {
-        const paymentIntentData: Stripe.PaymentIntentCreateParams = {
-          amount,
-          currency: 'eur',
-          transfer_data: {
-            destination: connectedAccountId,
-          },
-          metadata: {
-            connected_account: connectedAccountId,
-            platform_fee: applicationFeeAmount?.toString() || '0',
-            seller_amount: (amount - (applicationFeeAmount || 0)).toString(),
-            payment_methods_tried: methods.join(','),
-          },
-          confirm: false,
-          payment_method_types: methods,
-        };
-
-        if (applicationFeeAmount) {
-          paymentIntentData.application_fee_amount = applicationFeeAmount;
-        }
-
-        if (description) {
-          paymentIntentData.description = description;
-        }
-
-        if (customerEmail) {
-          paymentIntentData.receipt_email = customerEmail;
-        }
-
-        if (customerPhone) {
-          paymentIntentData.metadata.customer_phone = customerPhone;
-        }
-
-        const paymentIntent = await this.stripe.paymentIntents.create(
-          paymentIntentData,
-        );
-
-        console.log(
-          `✅ Payment Intent created with methods: ${methods.join(', ')}`,
-        );
-        return paymentIntent;
-      } catch (error) {
-        lastError = error;
-        console.warn(
-          `⚠️ Attempt with methods [${methods.join(', ')}] failed: ${
-            error.message
-          }`,
-        );
-
-        if (
-          !error.message.toLowerCase().includes('payment method') &&
-          !error.message.toLowerCase().includes('invalid')
-        ) {
-          break;
-        }
-
-        continue;
-      }
-    }
-
-    throw new Error(
-      `Error creating Portugal payment intent. Last error: ${
-        lastError?.message || 'Unknown error'
-      }`,
-    );
-  }
-
   async getAvailablePaymentMethods(
     currency: string = 'eur',
   ): Promise<string[]> {
@@ -397,6 +313,8 @@ export class StripeService {
       if (currency.toLowerCase() === 'eur') {
         paymentMethods.push('multibanco');
         paymentMethods.push('sepa_debit');
+        paymentMethods.push('amazon_pay');
+        paymentMethods.push('revolut_pay');
       } else if (currency.toLowerCase() === 'brl') {
         paymentMethods.push('boleto');
       }
